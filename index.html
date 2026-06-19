@@ -6,213 +6,109 @@
   <title>Habit Kalender</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0F0F14;
-      --surface: #1A1A24;
-      --surface2: #22222F;
-      --border: #2E2E3E;
-      --accent: #7C6FCD;
-      --accent-dim: rgba(124, 111, 205, 0.15);
-      --green: #4ADE80;
-      --green-dim: rgba(74, 222, 128, 0.15);
-      --red: #F87171;
-      --red-dim: rgba(248, 113, 113, 0.15);
-      --text: #E8E8F0;
-      --text-muted: #6B6B8A;
-      --radius: 12px;
+      --bg: #0F0F14; --surface: #1A1A24; --surface2: #22222F; --border: #2E2E3E;
+      --accent: #7C6FCD; --green: #4ADE80; --green-dim: rgba(74,222,128,0.15);
+      --red: #F87171; --red-dim: rgba(248,113,113,0.15);
+      --orange: #FB923C; --orange-dim: rgba(251,146,60,0.15);
+      --text: #E8E8F0; --text-muted: #6B6B8A; --radius: 12px;
     }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 32px 16px 64px;
-    }
-
-    header { text-align: center; margin-bottom: 36px; }
-
-    header h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 32px 16px 64px; }
+    header { text-align: center; margin-bottom: 28px; }
+    header h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
     header p { margin-top: 6px; color: var(--text-muted); font-size: 0.9rem; }
 
-    .habit-selector {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 28px;
-      background: var(--surface);
-      border: 1px solid var(--border);
+    /* Streak banner */
+    .streak-banner {
+      width: 100%; max-width: 640px;
+      background: var(--orange-dim);
+      border: 1px solid rgba(251,146,60,0.35);
       border-radius: var(--radius);
-      padding: 12px 16px;
-      width: 100%;
-      max-width: 640px;
+      padding: 16px 24px;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 14px;
     }
+    .streak-banner.hidden { display: none; }
+    .streak-text { flex: 1; }
+    .streak-text strong { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--orange); display: block; }
+    .streak-text span { font-size: 0.8rem; color: var(--text-muted); }
 
+    .habit-selector { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; width: 100%; max-width: 640px; }
     .habit-selector label { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.08em; }
-
-    .habit-selector input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-
+    .habit-selector input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 500; }
     .habit-selector input::placeholder { color: var(--text-muted); }
 
-    .progress-card {
-      width: 100%;
-      max-width: 640px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      margin-bottom: 20px;
-    }
+    /* Goal count setting */
+    .goal-selector { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; width: 100%; max-width: 640px; }
+    .goal-selector label { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.08em; }
+    .goal-count-btns { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+    .goal-count-btns button { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); width: 28px; height: 28px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+    .goal-count-btns button:hover { background: var(--border); }
+    .goal-count-val { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--green); min-width: 24px; text-align: center; }
 
+    .progress-card { width: 100%; max-width: 640px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; }
     .progress-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
-
     .progress-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
-
     .progress-count { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--green); }
-
     .progress-track { height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
-
     .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 99px; transition: width 0.4s ease; }
-
-    .progress-stats { display: flex; gap: 20px; margin-top: 14px; }
-
+    .progress-stats { display: flex; gap: 20px; margin-top: 14px; flex-wrap: wrap; }
     .stat { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-muted); }
-
     .dot { width: 8px; height: 8px; border-radius: 50%; }
     .dot.green { background: var(--green); }
     .dot.red { background: var(--red); }
     .dot.empty { background: var(--border); }
 
-    .calendar-card {
-      width: 100%;
-      max-width: 640px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
+    .calendar-card { width: 100%; max-width: 640px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
     .cal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--border); }
-
     .cal-month { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; }
-
-    .nav-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      width: 36px; height: 36px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 1rem;
-      transition: background 0.15s, border-color 0.15s;
-    }
-
+    .nav-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; transition: background 0.15s, border-color 0.15s; }
     .nav-btn:hover { background: var(--border); border-color: var(--accent); }
-
     .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); padding: 12px 16px 4px; gap: 4px; }
-
     .weekday { text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); padding: 4px 0; }
-
     .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 4px 16px 16px; gap: 4px; }
 
     .day {
-      aspect-ratio: 1;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 8px;
-      font-size: 0.85rem; font-weight: 500;
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.1s, background 0.15s;
-      user-select: none;
+      aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border-radius: 8px; font-size: 0.85rem; font-weight: 500; cursor: pointer;
+      position: relative; transition: transform 0.1s, background 0.15s; user-select: none; gap: 1px;
     }
-
     .day:hover { transform: scale(1.08); }
     .day.empty { cursor: default; pointer-events: none; }
     .day.default { background: var(--surface2); color: var(--text-muted); }
     .day.default:hover { background: var(--border); color: var(--text); }
     .day.achieved { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
     .day.not-achieved { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
-
-    .day.today::after {
-      content: '';
-      position: absolute;
-      bottom: 3px;
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
-
+    .day.today::after { content: ''; position: absolute; bottom: 3px; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
     .day.future { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+    .day-num { line-height: 1; }
+    .day-count { font-size: 0.6rem; font-weight: 700; opacity: 0.9; line-height: 1; }
+    .day-flame { font-size: 0.65rem; line-height: 1; }
 
-    .popup-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(4px);
-      z-index: 100;
-      align-items: center; justify-content: center;
-    }
-
+    /* Popup */
+    .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; }
     .popup-overlay.open { display: flex; }
-
-    .popup {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-      width: min(360px, 90vw);
-      text-align: center;
-      animation: popIn 0.2s ease;
-    }
-
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.92) translateY(8px); }
-      to   { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
+    .popup { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; width: min(380px, 90vw); text-align: center; animation: popIn 0.2s ease; }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.92) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     .popup-date { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px; }
+    .popup-question { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; line-height: 1.3; }
 
-    .popup-question { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 28px; line-height: 1.3; }
+    /* Count picker inside popup */
+    .count-picker { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 24px; background: var(--surface2); border-radius: 10px; padding: 14px; }
+    .count-picker label { font-size: 0.8rem; color: var(--text-muted); }
+    .count-picker-btns { display: flex; align-items: center; gap: 12px; }
+    .count-picker-btns button { background: var(--border); border: none; border-radius: 8px; color: var(--text); width: 32px; height: 32px; font-size: 1.1rem; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; justify-content: center; }
+    .count-picker-btns button:hover { background: var(--accent); }
+    .count-val { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--red); min-width: 32px; }
 
     .popup-btns { display: flex; gap: 12px; }
-
-    .popup-btn {
-      flex: 1; padding: 14px;
-      border-radius: 10px; border: none;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.95rem; font-weight: 600;
-      cursor: pointer;
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      transition: transform 0.1s, opacity 0.1s;
-    }
-
+    .popup-btn { flex: 1; padding: 14px; border-radius: 10px; border: none; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: transform 0.1s; }
     .popup-btn:hover { transform: scale(1.03); }
     .popup-btn:active { transform: scale(0.97); }
     .popup-btn.yes { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
     .popup-btn.no { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
     .popup-btn .icon { font-size: 1.6rem; }
-
     .popup-cancel { margin-top: 16px; background: none; border: none; color: var(--text-muted); font-size: 0.85rem; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
     .popup-cancel:hover { color: var(--text); }
 
@@ -227,10 +123,20 @@
   <p>Klick auf einen Tag — erreicht oder nicht erreicht.</p>
 </header>
 
+<!-- Streak banner -->
+<div class="streak-banner hidden" id="streakBanner">
+  <div class="streak-text">
+    <strong id="streakCount">0 Tage</strong>
+    <span>Streak — weiter so!</span>
+  </div>
+</div>
+
 <div class="habit-selector">
   <label>Mein Ziel:</label>
   <input type="text" id="habitName" placeholder="z.B. Sport, Lesen, Meditation …" maxlength="60" />
 </div>
+
+
 
 <div class="progress-card">
   <div class="progress-header">
@@ -264,16 +170,35 @@
   <button onclick="resetMonth()">Diesen Monat zurücksetzen</button>
 </div>
 
+<!-- Popup -->
 <div class="popup-overlay" id="popupOverlay">
   <div class="popup">
     <div class="popup-date" id="popupDate"></div>
     <div class="popup-question" id="popupQuestion">Ziel erreicht?</div>
-    <div class="popup-btns">
+
+    <!-- Count picker moved inside countPickerSection below -->
+
+    <div class="popup-btns" id="mainBtns">
       <button class="popup-btn yes" onclick="setDay('achieved')">
         <span class="icon">✓</span><span>Erreicht</span>
       </button>
-      <button class="popup-btn no" onclick="setDay('not-achieved')">
+      <button class="popup-btn no" onclick="showCountPicker()">
         <span class="icon">✗</span><span>Nicht erreicht</span>
+      </button>
+    </div>
+
+    <!-- Count picker for not-achieved -->
+    <div id="countPickerSection" style="display:none">
+      <div class="count-picker" id="countPicker">
+        <label>Wie oft nicht geschafft?</label>
+        <div class="count-picker-btns">
+          <button onclick="changeCount(-1)">−</button>
+          <div class="count-val" id="countVal">1</div>
+          <button onclick="changeCount(1)">+</button>
+        </div>
+      </div>
+      <button class="popup-btn no" style="width:100%" onclick="setDay('not-achieved')">
+        <span class="icon">✗</span><span>Bestätigen</span>
       </button>
     </div>
     <button class="popup-cancel" onclick="closePopup()">Abbrechen</button>
@@ -286,25 +211,79 @@
   let currentYear = today.getFullYear();
   let currentMonth = today.getMonth();
   let selectedDay = null;
+  let popupCount = 1;
+  let goalPerDay = 1;
 
   function storageKey() { return `habits-${currentYear}-${currentMonth}`; }
+  function loadData() { try { return JSON.parse(localStorage.getItem(storageKey())) || {}; } catch { return {}; } }
+  function saveData(data) { localStorage.setItem(storageKey(), JSON.stringify(data)); }
+  function getHabitName() { return document.getElementById('habitName').value.trim() || 'dein Ziel'; }
 
-  function loadData() {
-    try { return JSON.parse(localStorage.getItem(storageKey())) || {}; } catch { return {}; }
+  // Goal per day
+  function changeGoal(delta) {
+    goalPerDay = Math.max(1, Math.min(99, goalPerDay + delta));
+    document.getElementById('goalCountVal').textContent = goalPerDay;
+    localStorage.setItem('habit-goal', goalPerDay);
+    renderCalendar();
   }
 
-  function saveData(data) {
-    localStorage.setItem(storageKey(), JSON.stringify(data));
-  }
-
-  function getHabitName() {
-    return document.getElementById('habitName').value.trim() || 'dein Ziel';
+  // Popup count
+  function changeCount(delta) {
+    popupCount = Math.max(1, Math.min(99, popupCount + delta));
+    document.getElementById('countVal').textContent = popupCount;
   }
 
   document.getElementById('habitName').addEventListener('input', () => {
     localStorage.setItem('habit-name', document.getElementById('habitName').value);
     renderCalendar();
   });
+
+  // Calculate current streak (consecutive achieved days going back from today)
+  function calcStreak(allData) {
+    // Build a flat map of all days across months/years
+    // We'll check current month backwards, then previous months
+    let streak = 0;
+    let checkYear = today.getFullYear();
+    let checkMonth = today.getMonth();
+    let checkDay = today.getDate();
+
+    while (true) {
+      const key = `habits-${checkYear}-${checkMonth}`;
+      let monthData;
+      try { monthData = JSON.parse(localStorage.getItem(key)) || {}; } catch { monthData = {}; }
+
+      const entry = monthData[checkDay];
+      if (entry && entry.state === 'achieved') {
+        streak++;
+      } else {
+        break;
+      }
+
+      // Go back one day
+      checkDay--;
+      if (checkDay < 1) {
+        checkMonth--;
+        if (checkMonth < 0) { checkMonth = 11; checkYear--; }
+        checkDay = new Date(checkYear, checkMonth + 1, 0).getDate();
+      }
+      // Safety: don't go back more than 1000 days
+      if (streak > 1000) break;
+    }
+    return streak;
+  }
+
+
+  function updateStreak() {
+    const streak = calcStreak();
+    const banner = document.getElementById('streakBanner');
+    if (streak >= 1) {
+      banner.classList.remove('hidden');
+      // no flames
+      document.getElementById('streakCount').textContent = `${streak} Tag${streak !== 1 ? 'e' : ''} Streak`;
+    } else {
+      banner.classList.add('hidden');
+    }
+  }
 
   function renderCalendar() {
     const data = loadData();
@@ -313,7 +292,6 @@
     const offset = (firstDay + 6) % 7;
 
     document.getElementById('calMonth').textContent = `${MONTHS[currentMonth]} ${currentYear}`;
-
     const grid = document.getElementById('daysGrid');
     grid.innerHTML = '';
 
@@ -328,7 +306,9 @@
 
     for (let d = 1; d <= daysInMonth; d++) {
       const el = document.createElement('div');
-      const state = data[d] || 'default';
+      const entry = data[d] || { state: 'default', count: 1 };
+      const state = typeof entry === 'object' ? entry.state : entry;
+      const count = typeof entry === 'object' ? (entry.count || 1) : 1;
       const isFuture = isCurrentMonth && d > today.getDate();
       const isToday = isCurrentMonth && d === today.getDate();
 
@@ -343,7 +323,22 @@
       }
 
       if (isToday) el.classList.add('today');
-      el.textContent = d;
+
+      // Day number
+      const numEl = document.createElement('div');
+      numEl.className = 'day-num';
+      numEl.textContent = d;
+      el.appendChild(numEl);
+
+      // Show count badge if not-achieved and count > 1
+      if (state === 'not-achieved' && count > 1) {
+        const countEl = document.createElement('div');
+        countEl.className = 'day-count';
+        countEl.textContent = `×${count}`;
+        el.appendChild(countEl);
+      }
+
+
       if (!isFuture) el.onclick = () => openPopup(d);
       grid.appendChild(el);
     }
@@ -355,14 +350,25 @@
     document.getElementById('statAchieved').textContent = `${achieved} erreicht`;
     document.getElementById('statMissed').textContent = `${missed} nicht erreicht`;
     document.getElementById('statOpen').textContent = `${open} offen`;
+
+    updateStreak();
   }
 
   function openPopup(day) {
     selectedDay = day;
+    const data = loadData();
+    const entry = data[day] || { state: 'default', count: 1 };
+    const existingCount = typeof entry === 'object' ? (entry.count || 1) : 1;
+    popupCount = existingCount;
+
     const date = new Date(currentYear, currentMonth, day);
     const dateStr = date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
     document.getElementById('popupDate').textContent = dateStr;
     document.getElementById('popupQuestion').textContent = `Hast du "${getHabitName()}" geschafft?`;
+    document.getElementById('countVal').textContent = 1;
+    popupCount = 1;
+    document.getElementById('mainBtns').style.display = 'flex';
+    document.getElementById('countPickerSection').style.display = 'none';
     document.getElementById('popupOverlay').classList.add('open');
   }
 
@@ -371,10 +377,21 @@
     selectedDay = null;
   }
 
+  function showCountPicker() {
+    document.getElementById('mainBtns').style.display = 'none';
+    document.getElementById('countPickerSection').style.display = 'block';
+  }
+
   function setDay(state) {
     if (selectedDay === null) return;
     const data = loadData();
-    data[selectedDay] = (data[selectedDay] === state) ? 'default' : state;
+    const existing = data[selectedDay];
+    const existingState = existing && typeof existing === 'object' ? existing.state : existing;
+    if (existingState === state) {
+      data[selectedDay] = { state: 'default', count: 1 };
+    } else {
+      data[selectedDay] = { state, count: state === 'not-achieved' ? popupCount : 1 };
+    }
     saveData(data);
     closePopup();
     renderCalendar();
@@ -391,18 +408,19 @@
     if (currentMonth === 0) { currentMonth = 11; currentYear--; } else currentMonth--;
     renderCalendar();
   };
-
   document.getElementById('nextBtn').onclick = () => {
     if (currentMonth === 11) { currentMonth = 0; currentYear++; } else currentMonth++;
     renderCalendar();
   };
-
   document.getElementById('popupOverlay').addEventListener('click', e => {
     if (e.target === e.currentTarget) closePopup();
   });
 
+  // Load saved settings
   const savedHabit = localStorage.getItem('habit-name');
   if (savedHabit) document.getElementById('habitName').value = savedHabit;
+  const savedGoal = localStorage.getItem('habit-goal');
+  if (savedGoal) { goalPerDay = parseInt(savedGoal) || 1; }
 
   renderCalendar();
 </script>
